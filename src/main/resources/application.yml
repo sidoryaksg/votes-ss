@@ -1,6 +1,6 @@
 spring:
   datasource:
-    url: jdbc:h2:mem:votes
+    url: jdbc:h2:./votes
   h2:
     console:
       enabled: true
@@ -10,5 +10,4 @@ spring:
       hibernate:
         format_sql: true
     hibernate:
-      ddl-auto: update
-
+      ddl-auto: validate

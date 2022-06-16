@@ -13,7 +13,6 @@ import java.util.UUID;
 
 @Entity
 @Table (name = "votes")
-@Check(constraints = "vote_value in ('Y', 'N')")
 @EqualsAndHashCode (onlyExplicitlyIncluded = true)
 @Getter
 @Setter
