@@ -1,17 +1,15 @@
 package com.example.votesss.web;
 
 import com.example.votesss.app.domain.Vote;
-import com.example.votesss.app.domain.VoteValue;
 import com.example.votesss.app.service.VoteService;
-import lombok.Getter;
+import com.example.votesss.web.DTO.SaveVoteRequest;
+import com.example.votesss.web.DTO.SaveVoteResponse;
 import lombok.RequiredArgsConstructor;
-import lombok.Setter;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.UUID;
+
 @RequiredArgsConstructor
 @RestController
 public class VoteApi {
@@ -32,16 +30,3 @@ public class VoteApi {
     }
 }
 
-@Getter
-@Setter
-class SaveVoteRequest {
-    private UUID userId;
-    private VoteValue voteValue;
-}
-
-@Getter
-@Setter
-class SaveVoteResponse {
-    private boolean isSaved;
-
-}
