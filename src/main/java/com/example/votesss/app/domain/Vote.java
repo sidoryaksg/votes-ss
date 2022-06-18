@@ -16,6 +16,7 @@ import java.util.UUID;
 @EqualsAndHashCode (onlyExplicitlyIncluded = true)
 @Getter
 @Setter
+@Check(constraints = "vote_value in ('Y', 'N')")
 public class Vote {
 
     @EqualsAndHashCode.Include
