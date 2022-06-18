@@ -1,6 +1,7 @@
 package com.example.votesss.web;
 
 import com.example.votesss.app.domain.Vote;
+import com.example.votesss.app.domain.VoteStats;
 import com.example.votesss.app.service.VoteService;
 import com.example.votesss.web.DTO.SaveVoteRequest;
 import com.example.votesss.web.DTO.SaveVoteResponse;
@@ -34,8 +35,14 @@ public class VoteApi {
 
     @GetMapping (path = "/votes/stats")
     public GetVoteStatsResponse getStats() {
-        return GetVoteStatsResponse
-                .builder()
+
+        VoteStats voteStats = service.getStats();
+
+
+
+        return GetVoteStatsResponse.builder()
+                .totalY(voteStats.getTotalY())
+                .totalN(voteStats.getTotalN())
                 .build();
 
     }
@@ -45,9 +52,7 @@ public class VoteApi {
 @Builder
 class GetVoteStatsResponse {
 
-    @Builder.Default
-    private long totalY = 0;
+    private long totalY;
 
-    @Builder.Default
-    private long totalN = 0;
+    private long totalN;
 }
