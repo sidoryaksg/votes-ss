@@ -2,9 +2,7 @@ package com.example.votesss.app.domain;
 
 
 
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.Check;
 import org.hibernate.annotations.Type;
 
@@ -16,6 +14,9 @@ import java.util.UUID;
 @EqualsAndHashCode (onlyExplicitlyIncluded = true)
 @Getter
 @Setter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Check(constraints = "vote_value in ('Y', 'N')")
 public class Vote {
 
