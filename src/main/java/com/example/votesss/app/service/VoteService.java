@@ -8,6 +8,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.Tuple;
+import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
+
 @RequiredArgsConstructor
 @Service
 public class VoteService {
@@ -25,6 +30,23 @@ public class VoteService {
 
 
     public VoteStats getStats() {
+        List<Tuple> rawStatsTuples = repository.getStats();
+
+        Map<VoteValue, Long> rawStats = new TreeMap<>();
+
+        for (Tuple rawStatsTuple : rawStatsTuples){
+            VoteValue voteValue = (VoteValue) rawStatsTuple.get("voteValue");
+
+            long voteTotal = (Long) rawStatsTuple.get("voteTotal");
+
+            rawStats.put(voteValue, voteTotal);
+        }
+        return VoteStats.builder()
+                .totalY(rawStats.get(VoteValue.Y))
+                .totalN(rawStats.get(VoteValue.N))
+                .build();
+
+/*
         long totalY =  repository.count(Example.of(Vote.builder()
                 .voteValue(VoteValue.Y)
                 .build()));
@@ -38,5 +60,7 @@ public class VoteService {
                 .totalY(totalY)
                 .totalN(totalN)
                 .build();
+*/
+
     }
 }
