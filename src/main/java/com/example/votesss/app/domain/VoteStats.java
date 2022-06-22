@@ -1,14 +1,8 @@
 package com.example.votesss.app.domain;
 
-import lombok.Builder;
-import lombok.Getter;
+public interface VoteStats {
 
-@Getter
-@Builder
+    long getTotalY();
 
-public class VoteStats {
-
-    private final long totalY;
-
-    private final long totalN;
+    long getTotalN();
 }

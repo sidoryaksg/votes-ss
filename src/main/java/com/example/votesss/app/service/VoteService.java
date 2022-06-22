@@ -30,37 +30,6 @@ public class VoteService {
 
 
     public VoteStats getStats() {
-        List<Tuple> rawStatsTuples = repository.getStats();
-
-        Map<VoteValue, Long> rawStats = new TreeMap<>();
-
-        for (Tuple rawStatsTuple : rawStatsTuples){
-            VoteValue voteValue = (VoteValue) rawStatsTuple.get("voteValue");
-
-            long voteTotal = (Long) rawStatsTuple.get("voteTotal");
-
-            rawStats.put(voteValue, voteTotal);
-        }
-        return VoteStats.builder()
-                .totalY(rawStats.get(VoteValue.Y))
-                .totalN(rawStats.get(VoteValue.N))
-                .build();
-
-/*
-        long totalY =  repository.count(Example.of(Vote.builder()
-                .voteValue(VoteValue.Y)
-                .build()));
-
-        long totalN =  repository.count(Example.of(Vote.builder()
-                .voteValue(VoteValue.N)
-                .build()));
-
-
-        return VoteStats.builder()
-                .totalY(totalY)
-                .totalN(totalN)
-                .build();
-*/
-
+        return repository.getStats();
     }
 }
