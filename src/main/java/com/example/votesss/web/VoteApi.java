@@ -12,6 +12,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
+
+import java.io.IOException;
 
 
 @RequiredArgsConstructor
@@ -33,17 +36,44 @@ public class VoteApi {
 
     }
 
-    @GetMapping (path = "/votes/stats")
+    @GetMapping(path = "/votes/stats")
     public GetVoteStatsResponse getStats() {
 
         VoteStats voteStats = service.getStats();
-
 
 
         return GetVoteStatsResponse.builder()
                 .totalY(voteStats.getTotalY())
                 .totalN(voteStats.getTotalN())
                 .build();
+
+    }
+
+    @GetMapping(path = "/votes/stream")
+    public SseEmitter getStatsStream() {
+        SseEmitter sseEmitter = new SseEmitter();
+
+        new Thread(() -> {
+            for (int i = 1; i <= 3; i++) {
+                try {
+                    Thread.sleep(i * 1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+
+                try {
+                    sseEmitter.send("""
+                            {
+                                "totalY": %d,
+                                "totalN": 0
+                            }""".formatted(i));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }).start();
+
+        return sseEmitter;
 
     }
 }
@@ -56,3 +86,4 @@ class GetVoteStatsResponse {
 
     private long totalN;
 }
+
