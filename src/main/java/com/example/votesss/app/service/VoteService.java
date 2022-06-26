@@ -8,6 +8,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.context.ApplicationEvent;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
 
@@ -26,6 +28,9 @@ public class VoteService {
     @Autowired
     private CacheManager cacheManager;
 
+    @Autowired
+    private ApplicationEventPublisher applicationEventPublisher;
+
 
     public boolean save (Vote vote) {
         if (repository.existsByUserId(vote.getUserId())) {
@@ -34,6 +39,8 @@ public class VoteService {
         repository.save(vote);
 
         cacheManager.getCache(VOTE_STATS_CACHE_NAME).clear();
+
+        applicationEventPublisher.publishEvent(new VoteStatsChangedEvent("votes stats changed"));
 
         return true;
     }
