@@ -39,14 +39,21 @@
             <h1 id="totalN">N</h1>
         </div>
     </div>
-    <div class="row" style="margin-top: 100px">
-        <button type = "button" class="btn btn-outline-success">Random vote</button>
+    <div class="row text-center" style="margin-top: 100px">
+        <div class="col">
+            <button id="yVoteButton" type = "button" class="btn btn-outline-success">Yes vote</button>
+        </div>
+        <div class="col">
+            <button id="nVoteButton" type = "button" class="btn btn-outline-success">No vote</button>
+        </div>
+
+
 
 
     </div>
 </div>
 
-    <script type="text/javascript">
+<script type="text/javascript">
         const eventSource = new EventSource('/votes/stream');
 
         eventSource.onmessage = function(message) {
@@ -64,9 +71,24 @@
         }
 
         $(function() {
-            $('button').click(function(e) {
+            $('#yVoteButton').click(function(e) {
                 const randomUserId = randomUuid();
-                const randomVoteValue = Math.random() < 0.5 ? 'Y' : 'N';
+                const randomVoteValue = 'Y';
+
+                $.post({
+                    url: '/votes',
+                    dataType: 'json',
+                    contentType: 'application/json',
+                    data: JSON.stringify({
+                        userId: randomUserId,
+                        voteValue: randomVoteValue
+                        })
+                });
+            });
+
+            $('#nVoteButton').click(function(e) {
+                const randomUserId = randomUuid();
+                const randomVoteValue = 'N';
 
                 $.post({
                     url: '/votes',
