@@ -52,8 +52,8 @@
         eventSource.onmessage = function(message) {
             const data = JSON.parse(message.data);
 
-            $('#totalY').text = (data.totalY);
-            $('#totalN').text = (data.totalN);
+            $('#totalY').text(data.totalY);
+            $('#totalN').text(data.totalN);
 
         }
 
