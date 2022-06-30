@@ -33,16 +33,14 @@ public class VoteService {
 
 
     public boolean save (Vote vote) {
-        if (repository.existsByUserId(vote.getUserId())) {
-            return false;
+        if (repository.saveOnce(vote) == 1){
+            cacheManager.getCache(VOTE_STATS_CACHE_NAME).clear();
+
+            applicationEventPublisher.publishEvent(new VoteStatsChangedEvent("votes stats changed"));
+            return true;
         }
-        repository.save(vote);
 
-        cacheManager.getCache(VOTE_STATS_CACHE_NAME).clear();
-
-        applicationEventPublisher.publishEvent(new VoteStatsChangedEvent("votes stats changed"));
-
-        return true;
+        return false;
     }
 
     @Cacheable("vote-stats")
