@@ -14,10 +14,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.annotation.Async;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import java.io.IOException;
@@ -27,13 +24,14 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 @RequiredArgsConstructor
 @RestController
+@RequestMapping(path = "/votes")
 public class VoteApi {
     private static final List<SseEmitter> voteStatsStreams = new CopyOnWriteArrayList<>();
 
     private final VoteService service;
     private final ObjectMapper objectMapper;
 
-    @PostMapping(path = "/votes")
+    @PostMapping
     public SaveVoteResponse save(@RequestBody SaveVoteRequest request) {
         System.out.println("[Handle newVote:: Started] Thread.currentThread().getName()" + Thread.currentThread().getName());
 
@@ -53,7 +51,7 @@ public class VoteApi {
 
     }
 
-    @GetMapping(path = "/votes/stats")
+    @GetMapping(path = "/stats")
     public GetVoteStatsResponse getStats() {
 
         VoteStats voteStats = service.getStats();
@@ -66,7 +64,7 @@ public class VoteApi {
 
     }
 
-    @GetMapping(path = "/votes/stream")
+    @GetMapping(path = "/stream")
     public SseEmitter getStatsStream() throws JsonProcessingException {
         SseEmitter voteStatsStream = new SseEmitter();
 
