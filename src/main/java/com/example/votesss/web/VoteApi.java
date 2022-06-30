@@ -13,6 +13,7 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.event.EventListener;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -34,15 +35,21 @@ public class VoteApi {
 
     @PostMapping(path = "/votes")
     public SaveVoteResponse save(@RequestBody SaveVoteRequest request) {
-        Vote vote = new Vote();
-        vote.setUserId(request.getUserId());
-        vote.setVoteValue(request.getVoteValue());
+        System.out.println("[Handle newVote:: Started] Thread.currentThread().getName()" + Thread.currentThread().getName());
 
-        boolean isSaved = service.save(vote);
+        try {
+            Vote vote = new Vote();
+            vote.setUserId(request.getUserId());
+            vote.setVoteValue(request.getVoteValue());
 
-        SaveVoteResponse response = new SaveVoteResponse();
-        response.setSaved(isSaved);
-        return response;
+            boolean isSaved = service.save(vote);
+
+            SaveVoteResponse response = new SaveVoteResponse();
+            response.setSaved(isSaved);
+            return response;
+        } finally {
+            System.out.println("[Handle newVote:: Finished]");
+        }
 
     }
 
@@ -83,10 +90,13 @@ public class VoteApi {
         return voteStatsStream;
 
     }
-
+    @Async
     @EventListener
     public void on(VoteStatsChangedEvent event) throws JsonProcessingException {
+
+        System.out.println("[Handle Event :: Started] Thread.currentThread().getName() = " + Thread.currentThread().getName());
         notifyVoteStatsStreams(voteStatsStreams);
+        System.out.printf("[Hande Event :: Finished]");
     }
 
     private void notifyVoteStatsStreams(List<SseEmitter> voteStatsStreams) throws JsonProcessingException {
